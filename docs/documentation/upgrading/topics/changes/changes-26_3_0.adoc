@@ -2,6 +2,10 @@
 
 Breaking changes are identified as requiring changes from existing users to their configurations.
 
+=== local admin deprecated for removal
+
+`UrlType.LOCAL_ADMIN` and the corresponding welcome theme variable `localAdminUrl` have been deprecated for eventual removal. The default welcome resource will now simply mention localhost rather than providing a URL when an admin user has yet to be created.
+
 === Deprecated for removal the Instagram Identity Broker
 
 In this release, the Instagram Identity Broker is deprecated for removal and is not enabled by default.
@@ -29,6 +33,10 @@ recommended to use the configuration option *Warning Threshold* of the *Recovery
 When you want the user, who is authenticated to your client application, to link his or her account to a specific identity provider, consider using the Application initiated action (AIA) based
 mechanism with the action `idp_link`. The proprietary custom protocol for client initiated account linking is deprecated now and might be removed in the future versions. For more information, see the
 Client initiated account link section of the link:{developerguide_link}[{developerguide_name}].
+
+=== `KeycloakSessionTask.useExistingSession` method removed
+
+`KeycloakSessionTask.useExistingSession` was only useful to private server logic. Now that this logic has been refined, there is no need for this method. 
 
 === Deprecation of `spi-connections-infinispan-quarkus-site-name`
 
