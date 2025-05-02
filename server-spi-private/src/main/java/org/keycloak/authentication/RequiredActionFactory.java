@@ -17,11 +17,14 @@
 
 package org.keycloak.authentication;
 
+import org.keycloak.models.Constants;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.RequiredActionConfigModel;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.provider.ProviderFactory;
+import org.keycloak.userprofile.ValidationException;
+import org.keycloak.validate.ValidationError;
 
 import java.util.List;
 
@@ -66,5 +69,19 @@ public interface RequiredActionFactory extends ProviderFactory<RequiredActionPro
      * @param model
      */
     default void validateConfig(KeycloakSession session, RealmModel realm, RequiredActionConfigModel model) {
+        int parsedMaxAuthAge;
+        try {
+            parsedMaxAuthAge = parseMaxAuthAge(model);
+        } catch (NumberFormatException ex) {
+            throw new ValidationException(new ValidationError(getId(), Constants.MAX_AUTH_AGE_KEY, "error-invalid-value"));
+        }
+
+        if (parsedMaxAuthAge < 0) {
+            throw new ValidationException(new ValidationError(getId(), Constants.MAX_AUTH_AGE_KEY, "error-number-out-of-range-too-small", 0));
+        }
+    }
+
+    static int parseMaxAuthAge(RequiredActionConfigModel model) throws NumberFormatException {
+        return Integer.parseInt(model.getConfigValue(Constants.MAX_AUTH_AGE_KEY));
     }
 }
